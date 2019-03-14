@@ -1,0 +1,111 @@
+#include<stdio.h>
+#include<stdbool.h>
+#include<math.h>
+#include<windows.h>
+
+void SetPosition(int X, int Y)
+{
+HANDLE Screen;
+Screen = GetStdHandle(STD_OUTPUT_HANDLE);
+COORD Position={X, Y};
+SetConsoleCursorPosition(Screen,Position);
+
+}
+int main() {
+    int width = 120;
+    int height = 40;
+    wchar_t screen[height][width];
+    char map[16][16] =  {"################",
+                        "#..............#",
+                        "#..............#",
+                        "#..............#",
+                        "#..............#",
+                        "#..............#",
+                        "#..............#",
+                        "#..............#",
+                        "#..............#",
+                        "#..............#",
+                        "#..............#",
+                        "#..............#",
+                        "#..............#",
+                        "#..............#",
+                        "#..............#",
+                        "################",};
+    double px = 2.0;
+    double py = 8.0;
+    double angle = 0.0;
+    double fov = 3.14159 / 4.0;
+    int loop = 1;
+    while(loop == 1) {
+    for(int y=0;y<height;y++) {
+            for (int x=0;x<width;x++)
+            {
+            double ray = (angle - (fov/2) ) + ((double)x/(double)width) * fov;
+            double distance = 0;
+            double td = 0;
+            bool hit = false;
+            double tx = sin(ray);
+            double ty = cos(ray);
+            while(hit == false){
+                distance += 0.1;
+                int cx = (int)(px+(tx*distance));
+                int cy = (int)(py-(ty*distance));
+                if (map[cy][cx] == '#'){
+                    hit = true;
+                }
+            }
+
+            int ceiling = (double)(height/2.0) - (height / distance);
+            int floor = height - ceiling;
+            if (y<ceiling){
+                screen[y][x] = ' ';
+            }else if(y>=ceiling && y<=floor){
+                if(distance>4&&distance<=8){
+                    screen[y][x] = 177;
+                }else if (distance<=4){
+                    screen[y][x] = 178;
+                }else if (distance >8){
+                    screen[y][x] = 176;
+                }
+            }else {
+                screen[y][x] = 219;
+            }
+            screen[20][40] = 'R';
+            screen[20][41] = 'A';
+            screen[20][42] = 'Y';
+            screen[20][43] = ' ';
+            screen[20][44] = 'C';
+            screen[20][45] = 'A';
+            screen[20][46] = 'S';
+            screen[20][47] = 'T';
+            screen[20][48] = 'I';
+            screen[20][49] = 'N';
+            screen[20][50] = 'G';
+            screen[20][51] = ' ';
+            screen[20][52] = 'B';
+            screen[20][53] = 'Y';
+            screen[20][54] = ' ';
+            screen[20][55] = 'J';
+            screen[20][56] = 'I';
+            screen[20][57] = 'R';
+            screen[20][58] = 'A';
+            screen[20][59] = 'P';
+            screen[20][60] = 'A';
+            screen[20][61] = 'S';
+            screen[20][62] = ' ';
+            screen[20][63] = 'J';
+            screen[20][64] = 'I';
+            screen[20][65] = 'P';
+            screen[20][66] = 'I';
+            screen[20][67] = 'P';
+            screen[20][68] = 'O';
+            screen[20][69] = 'P';
+            printf("%c",screen[y][x]);
+            }
+        printf("\n");
+
+    }
+    SetPosition(0,0);
+    angle-= 0.1;
+    }
+}
